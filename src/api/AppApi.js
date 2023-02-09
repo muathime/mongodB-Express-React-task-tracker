@@ -1,8 +1,25 @@
 import axios from "axios";
 
 const baseURL = "http://localhost:4001";
-const TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbnRyeV9pZCI6IjMyOSIsInRleHQiOiJUaGlzIGlzIGEgbmV3IHRhc2sgZm9yIHlvdSIsImRheSI6IjIzcmQgTWF5LCAyMDMwIiwiaWF0IjoxNjc1ODc1MDUyLCJleHAiOjE2NzU4ODIyNTJ9.WXvSdZlDq3HuON7sEVwaWh0hK-_sSc0D539e6_gnPsw";
+
+  const getAuthToken = async() => {
+    const authToken = await axios({
+      method: "post",
+      url: `${baseURL}/login`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: JSON.stringify({
+        "email": "kambuamawia@gmail.com",
+        "password": "12345",
+      }),
+    }).catch((error) => {
+      console.log("There was an error!", error);
+      return error;
+    });
+
+    if(authToken) return authToken.data;
+  }
 
   const addNew = async (values) => {
     return await axios({
@@ -23,7 +40,7 @@ const getTasks = async () => {
     method: "post",
     url: `${baseURL}/tasks`,
     headers: {
-      "x-access-token": TOKEN,
+      "x-access-token": await getAuthToken(),
       // "Content-Type": "application/json",
     },
     data: "",
@@ -53,7 +70,7 @@ const deleteTaskById = async (taskId) => {
     url: `${baseURL}/removeTask/${taskId}`,
     headers: {
       // "Content-Type": "application/json",
-      "x-access-token": TOKEN,
+      "x-access-token": await getAuthToken(),
     },
     data: "",
   }).catch((error) => {
@@ -68,7 +85,7 @@ const updateTaskbyId = async (taskId) => {
     url: `${baseURL}/update/${taskId}`,
     headers: {
       // "Content-Type": "application/json",
-      "x-access-token": TOKEN,
+      "x-access-token": await getAuthToken(),
     },
     data: "",
   }).catch((error) => {

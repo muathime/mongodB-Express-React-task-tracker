@@ -4,63 +4,64 @@ import AddTask from "../components/AddTask";
 import Header from "../components/Header";
 import Tasks from "../components/Tasks";
 
-
-function App() {
+function TasksPage() {
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
-    getApiTasks()
-  },[tasks]);
+    getApiTasks();
+  }, [tasks]);
 
   const getApiTasks = async () => {
     const response = await getTasks();
-    setTasks(response.data);
-    // console.log(response.data);
+    if (response.data) setTasks(response.data);
   };
 
   const [taskForm, setTaskForm] = useState(false);
-  
+
   //add task
-  const addTask = async(task) => {
+  const addTask = async (task) => {
     const taskId = Math.floor(Math.random() * 1000 + 1);
     const newTask = { taskId, ...task };
     const response = await addNew(newTask);
-    setTasks(newTask)
+    setTasks(newTask);
     console.log(response);
   };
 
   //delete task
-  const deleteTask = async(taskId) => {
+  const deleteTask = async (taskId) => {
     try {
       const response = await deleteTaskById(taskId);
       if (response) {
-        console.log(response)
+        console.log(response);
         setTasks(tasks.filter((task) => task.taskId !== taskId));
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
   // Toggle reminder
-  const toggleReminder = async(taskId) => {
+  const toggleReminder = async (taskId) => {
     try {
       const response = await updateTaskbyId(taskId);
       if (response) {
-        console.log(response)
+        console.log(response);
         setTasks(
           tasks.map((task) =>
-            task.taskId === taskId ? { ...task, reminder: !task.reminder } : task
+            task.taskId === taskId
+              ? { ...task, reminder: !task.reminder }
+              : task
           )
         );
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
   return (
     <div className="container">
       <Header
+        showBtn={true}
         title={"Task Tracker"}
         onAddBtnClick={() => setTaskForm(true)}
         onCloseBtnClick={() => setTaskForm(false)}
@@ -82,4 +83,4 @@ function App() {
   );
 }
 
-export default App;
+export default TasksPage;
