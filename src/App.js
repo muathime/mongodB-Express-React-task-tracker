@@ -3,16 +3,15 @@ import LoginPage from "./pages/LoginPage";
 import TasksPage from "./pages/TasksPage";
 
 function App() {
-  const [user, setUser] = useState(false)
-
-  useEffect(() => {
-    setUser(localStorage.getItem("user"))
-  }, [user]);
+const [user, setUser] = useState()
+useEffect(()=>{
+  setUser(localStorage.getItem("user"));
+}, [user]);
 
   return (
-    <div>
-      {user ? <TasksPage /> : <LoginPage />}
-    </div>
+    <>
+    { user ? <TasksPage /> : <LoginPage />}
+    </>
   );
 }
 

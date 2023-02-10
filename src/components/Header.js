@@ -16,7 +16,7 @@ const Header = ({ title, onAddBtnClick, onCloseBtnClick, showAdd, showBtn }) => 
           <Button
             txt={"logout"}
             color={"red"}
-            onBtnClick={localStorage.removeItem("user")}
+            onBtnClick={()=>localStorage.clear()}
           />
         </>
       )}

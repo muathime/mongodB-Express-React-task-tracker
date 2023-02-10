@@ -1,29 +1,33 @@
-import React, { useState } from 'react'
-import Header from '../components/Header';
-
+import React, { useState, useEffect } from "react";
+import { login } from "../api/AppApi";
+import Header from "../components/Header";
 
 function LoginPage() {
-  const [username, setUsername] = useState("");
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    // console.log('login');
+  }, [user]);
+
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
-  const [user, setUser] = useState("");
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    const userLogins = { username, password, remember };
-    console.log(userLogins);
+    const userLogins = { email, password };
+
     // logic to send send the username and password to the server
-
-    //   setUser(response.data);
-    setUser(
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImthbWJ1YW1hd2lhQGdtYWlsLmNvbSIsImlhdCI6MTY3NTk0OTQxOCwiZXhwIjoxNjc1OTkyNjE4fQ.w5Dv265tE4s8I-8ORO72QYYNKwMFzmKbktltx0mrF78"
-    );
-
-    localStorage.setItem("user", user);
-
-    setUsername("");
-    setPassword("");
-    setRemember(false);
+    const response = await login(userLogins);
+    if (response) {
+      localStorage.setItem("user", response);
+      setEmail("");
+      setPassword("");
+      setRemember(false);
+      setUser(localStorage.getItem(user))
+    } else {
+      console.log("Couldn't remember user logins");
+    }
   };
 
   return (
@@ -37,8 +41,8 @@ function LoginPage() {
             type="email"
             placeholder="eg. xxxxx@email.com"
             required
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
 
@@ -69,7 +73,6 @@ function LoginPage() {
         </div>
       </form>
     </div>
-  );
-}
+  );}
 
-export default LoginPage
+export default LoginPage;

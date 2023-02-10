@@ -2,24 +2,26 @@ import axios from "axios";
 
 const baseURL = "http://localhost:4001";
 
-  const getAuthToken = async() => {
+  const getAuthToken = () => {
+    const authToken = localStorage.getItem("user")
+    if(authToken) return authToken;
+  }
+
+  const login = async (loginData) => {
     const authToken = await axios({
       method: "post",
       url: `${baseURL}/login`,
       headers: {
         "Content-Type": "application/json",
       },
-      data: JSON.stringify({
-        "email": "kambuamawia@gmail.com",
-        "password": "12345",
-      }),
+      data: JSON.stringify(loginData),
     }).catch((error) => {
       console.log("There was an error!", error);
       return error;
     });
 
-    if(authToken) return authToken.data;
-  }
+    if (authToken) return authToken.data;
+  };
 
   const addNew = async (values) => {
     return await axios({
@@ -93,4 +95,4 @@ const updateTaskbyId = async (taskId) => {
     return error;
   });
 };
-export { addNew, getTasks, getTaskById, deleteTaskById, updateTaskbyId };
+export { addNew, getTasks, getTaskById, deleteTaskById, updateTaskbyId, login };
