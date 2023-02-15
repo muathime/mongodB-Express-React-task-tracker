@@ -23,7 +23,7 @@ const baseURL = "http://localhost:4001";
     if (authToken) return authToken.data;
   };
 
-  const register = async (registerData) => {
+  const registerUser = async (registerData) => {
     const authToken = await axios({
       method: "post",
       url: `${baseURL}/register`,
@@ -111,4 +111,4 @@ const updateTaskbyId = async (taskId) => {
     return error;
   });
 };
-export { addNew, getTasks, getTaskById, deleteTaskById, updateTaskbyId, login, register };
+export { addNew, getTasks, getTaskById, deleteTaskById, updateTaskbyId, login, registerUser };

@@ -1,20 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Row, Col, Image } from "react-bootstrap";
-import { login, register } from "../api/AppApi";
+import { login, registerUser } from "../api/AppApi";
 import colors from "../data/Colors";
 import "bootstrap/dist/css/bootstrap.css";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
 
 function AuthPage() {
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().email().required().label("Email"),
+    password: Yup.string().required().label("Password"),
+    confirmPwd: Yup.string()
+      .required()
+      .oneOf([Yup.ref("password")], "Passwords does not match")
+      .label("Confirm"),
+  });
+  const formOptions = { resolver: yupResolver(validationSchema) };
+  const { register, handleSubmit, reset, formState } = useForm(formOptions);
+  const { errors } = formState;
+
   const [user, setUser] = useState();
   const [reg, setReg] = useState(false);
 
-  useEffect(() => {
-    // console.log('login');
-  }, [user]);
   //Login
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [remember, setRemember] = useState(false);
 
   const onLogin = async (e) => {
@@ -35,34 +46,32 @@ function AuthPage() {
     }
   };
 
-  const onRegister = async (e) => {
-    e.preventDefault();
-    const userReg = { email, password, confirmPassword };
+  function onSubmit(data) {
+    console.log(JSON.stringify(data, null, 4));
+    return false;
+  }
 
-    const response = await register(userReg);
+  const onRegister = async (userReg) => {
+    const response = await registerUser(userReg);
+
     if (response) {
       localStorage.setItem("user", response);
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-      setRemember(false);
-      setUser(localStorage.getItem(user));
       window.location.reload();
     } else {
-      console.log("Couldn't remember user register details");
+      console.log("Couldn't remember user logins");
     }
   };
 
   return (
     <div>
       {reg ? (
-        <Form onSubmit={onRegister}>
+        <Form onSubmit={handleSubmit(onRegister)}>
           <Row>
             <Col></Col>
-            <Col md="auto">
+            <Col xs="auto">
               <Image
                 width="100"
-                className="rounded mx-auto d-block mt-5 mb-1"
+                className="rounded mx-auto d-block mt-1 mb-5"
                 src="https://seeklogo.com/images/C/chatgpt-logo-02AFA704B5-seeklogo.com.png"
               />
               <h3>Register</h3>
@@ -76,15 +85,18 @@ function AuthPage() {
                 </Form.Label>
                 <Form.Control
                   style={{ marginTop: 0 }}
-                  type="email"
                   placeholder="youremail@email.com"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  // value={email}
+                  // onChange={(e) => setEmail(e.target.value)}
+                  {...register("email")}
+                  className={`form-control ${errors.email ? "is-invalid" : ""}`}
                 />
                 <Form.Text className="text-muted">
                   We'll never share your email with anyone else.
                 </Form.Text>
+                <div className="invalid-feedback" style={{ fontSize: 10 }}>
+                  {errors.email?.message}
+                </div>
               </Form.Group>
 
               <Form.Group className="mb-1" controlId="formBasicPassword">
@@ -98,9 +110,16 @@ function AuthPage() {
                   style={{ marginTop: 0 }}
                   type="password"
                   placeholder="*******"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  // value={password}
+                  // onChange={(e) => setPassword(e.target.value)}
+                  {...register("password")}
+                  className={`form-control ${
+                    errors.password ? "is-invalid" : ""
+                  }`}
                 />
+                <div className="invalid-feedback" style={{ fontSize: 10 }}>
+                  {errors.password?.message}
+                </div>
               </Form.Group>
 
               <Form.Group className="mb-1" controlId="formBasicPassword">
@@ -114,10 +133,21 @@ function AuthPage() {
                   style={{ marginTop: 0 }}
                   type="password"
                   placeholder="*******"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  // value={confirmPassword}
+                  // onChange={(e) => setConfirmPassword(e.target.value)}
+                  {...register("confirmPwd")}
+                  className={`form-control ${
+                    errors.confirmPwd ? "is-invalid" : ""
+                  }`}
                 />
+                <div className="invalid-feedback" style={{ fontSize: 10 }}>
+                  {errors.confirmPwd?.message}
+                </div>
               </Form.Group>
+
+              <div className="invalid-feedback" style={{ fontSize: 10 }}>
+                {errors.confirmPwd?.message}
+              </div>
 
               <Form.Group className="mb-1" controlId="formBasicCheckbox">
                 <Form.Check
@@ -155,10 +185,10 @@ function AuthPage() {
         <Form onSubmit={onLogin}>
           <Row>
             <Col></Col>
-            <Col md="auto">
+            <Col xs="auto">
               <Image
                 width="100"
-                className="rounded mx-auto d-block mt-5 mb-1"
+                className="rounded mx-auto d-block mt-1 mb-5"
                 src="https://seeklogo.com/images/C/chatgpt-logo-02AFA704B5-seeklogo.com.png"
               />
               <h3>Login</h3>
@@ -172,15 +202,11 @@ function AuthPage() {
                 </Form.Label>
                 <Form.Control
                   style={{ marginTop: 0 }}
-                  type="email"
                   placeholder="youremail@email.com"
-                  required
+                  type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
-                <Form.Text className="text-muted">
-                  We'll never share your email with anyone else.
-                </Form.Text>
               </Form.Group>
 
               <Form.Group className="mb-1" controlId="formBasicPassword">
@@ -198,6 +224,7 @@ function AuthPage() {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </Form.Group>
+
               <Form.Group className="mb-1" controlId="formBasicCheckbox">
                 <Form.Check
                   style={{ fontSize: 12, color: colors.davysGray }}
@@ -208,6 +235,7 @@ function AuthPage() {
                   onChange={(e) => setRemember(e.currentTarget.checked)}
                 />
               </Form.Group>
+
               <div className="d-grid gap-2">
                 <Button variant="success" type="submit" size="sm">
                   Log In

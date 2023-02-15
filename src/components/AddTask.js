@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { Button, Form, } from "react-bootstrap";
 import colors from "../data/Colors";
 
 function AddTask({ onAddTask }) {
