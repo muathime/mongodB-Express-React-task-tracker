@@ -6,6 +6,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
+import LandingPage from "./LandingPage";
 
 function AuthPage() {
   const validationSchema = Yup.object().shape({
@@ -22,6 +23,7 @@ function AuthPage() {
 
   const [user, setUser] = useState();
   const [reg, setReg] = useState(false);
+  const [landing, setLanding] = useState(true);
 
   //Login
   const [email, setEmail] = useState("");
@@ -46,11 +48,6 @@ function AuthPage() {
     }
   };
 
-  function onSubmit(data) {
-    console.log(JSON.stringify(data, null, 4));
-    return false;
-  }
-
   const onRegister = async (userReg) => {
     const response = await registerUser(userReg);
 
@@ -62,16 +59,23 @@ function AuthPage() {
     }
   };
 
+  const openReg = () => {
+    setLanding(false);
+    setReg(true);
+  };
+
   return (
     <div>
-      {reg ? (
+      {landing ? (
+        <LandingPage loginBtn={() => setLanding(false)} registerBtn={openReg} />
+      ) : reg ? (
         <Form onSubmit={handleSubmit(onRegister)}>
           <Row>
             <Col></Col>
-            <Col xs="auto">
+            <Col xs="4">
               <Image
-                width="100"
-                className="rounded mx-auto d-block mt-1 mb-5"
+                width="50"
+                className="rounded mx-auto d-block mt-5 mb-5"
                 src="https://seeklogo.com/images/C/chatgpt-logo-02AFA704B5-seeklogo.com.png"
               />
               <h3>Register</h3>
@@ -185,10 +189,10 @@ function AuthPage() {
         <Form onSubmit={onLogin}>
           <Row>
             <Col></Col>
-            <Col xs="auto">
+            <Col xs="4">
               <Image
-                width="100"
-                className="rounded mx-auto d-block mt-1 mb-5"
+                width="50"
+                className="rounded mx-auto d-block mt-5 mb-5"
                 src="https://seeklogo.com/images/C/chatgpt-logo-02AFA704B5-seeklogo.com.png"
               />
               <h3>Login</h3>
