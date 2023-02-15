@@ -23,6 +23,22 @@ const baseURL = "http://localhost:4001";
     if (authToken) return authToken.data;
   };
 
+  const register = async (registerData) => {
+    const authToken = await axios({
+      method: "post",
+      url: `${baseURL}/register`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: JSON.stringify(registerData),
+    }).catch((error) => {
+      console.log("There was an error!", error);
+      return error;
+    });
+
+    if (authToken) return authToken.data;
+  };
+
   const addNew = async (values) => {
     return await axios({
       method: "post",
@@ -95,4 +111,4 @@ const updateTaskbyId = async (taskId) => {
     return error;
   });
 };
-export { addNew, getTasks, getTaskById, deleteTaskById, updateTaskbyId, login };
+export { addNew, getTasks, getTaskById, deleteTaskById, updateTaskbyId, login, register };

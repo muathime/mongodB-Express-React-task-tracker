@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import LoginPage from "./pages/LoginPage";
+import { Container } from "react-bootstrap";
+import AuthPage from "./pages/AuthPage";
 import TasksPage from "./pages/TasksPage";
 
 function App() {
@@ -9,9 +10,9 @@ useEffect(()=>{
 }, [user]);
 
   return (
-    <>
-    { user ? <TasksPage /> : <LoginPage />}
-    </>
+    <Container fluid className="mt-3">
+      {user ? <TasksPage /> : <AuthPage />}
+    </Container>
   );
 }
 

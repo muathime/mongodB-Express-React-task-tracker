@@ -1,8 +1,14 @@
 import { useEffect, useState } from "react";
-import { addNew, getTasks, deleteTaskById, updateTaskbyId } from "../api/AppApi";
+import {
+  addNew,
+  getTasks,
+  deleteTaskById,
+  updateTaskbyId,
+} from "../api/AppApi";
 import AddTask from "../components/AddTask";
 import Header from "../components/Header";
 import Tasks from "../components/Tasks";
+import { Col, Row } from "react-bootstrap";
 
 function TasksPage() {
   const [tasks, setTasks] = useState([]);
@@ -59,27 +65,31 @@ function TasksPage() {
   };
 
   return (
-    <div className="container">
-      <Header
-        showBtn={true}
-        title={"Task Tracker"}
-        onAddBtnClick={() => setTaskForm(true)}
-        onCloseBtnClick={() => setTaskForm(false)}
-        showAdd={taskForm}
-      />
-
-      {taskForm && <AddTask onAddTask={addTask} />}
-
-      {tasks.length > 0 ? (
-        <Tasks
-          tasks={tasks}
-          onDelete={deleteTask}
-          toggleReminder={toggleReminder}
+    <Row>
+      <Col></Col>
+      <Col md="9">
+        <Header
+          showBtn={true}
+          title={taskForm? "Add New Task" : "Task Tracker"}
+          onAddBtnClick={() => setTaskForm(true)}
+          onCloseBtnClick={() => setTaskForm(false)}
+          showAdd={taskForm}
         />
-      ) : (
-        <p>No tasks to show!</p>
-      )}
-    </div>
+
+        {taskForm && <AddTask onAddTask={addTask} />}
+
+        {tasks.length > 0 ? (
+          <Tasks
+            tasks={tasks}
+            onDelete={deleteTask}
+            toggleReminder={toggleReminder}
+          />
+        ) : (
+          <p>No tasks to show!</p>
+        )}
+      </Col>
+      <Col></Col>
+    </Row>
   );
 }
 

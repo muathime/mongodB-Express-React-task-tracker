@@ -7,7 +7,7 @@ function Task({ task, onDelete, toggleReminder }) {
       <h3>
         {task.text}{" "}
         <FaTimes
-          style={{ color: "red", cursor: "progress" }}
+          style={{ color: "red", cursor: "grab" }}
           onClick={() => onDelete(task.taskId)}
         />
       </h3>

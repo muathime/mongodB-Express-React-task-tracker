@@ -1,23 +1,24 @@
 import React from 'react'
-import Button from './Button';
+import CustomButton from "./CustomButton";
 
 const Header = ({ title, onAddBtnClick, onCloseBtnClick, showAdd, showBtn }) => {
+  const logout = () => {
+    localStorage.clear();
+    window.location.reload();
+  }
+
   return (
     <header className="header">
       <h1>{title}</h1>
       {showBtn && (
         <>
-          <Button
+          <CustomButton
             txt={showAdd ? "Close" : "Add"}
             color={showAdd ? "orange" : "green"}
             onBtnClick={showAdd ? onCloseBtnClick : onAddBtnClick}
           />
 
-          <Button
-            txt={"logout"}
-            color={"red"}
-            onBtnClick={()=>localStorage.clear()}
-          />
+          <CustomButton txt={"logout"} color={"red"} onBtnClick={logout} />
         </>
       )}
     </header>
